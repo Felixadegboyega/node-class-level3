@@ -1,8 +1,23 @@
 const express = require('express');
 const path = require('path');
 const app = express();
+const dotenv = require('dotenv');
+dotenv.config();
+const mongoose = require('mongoose');
+
+mongoose.connect(process.env.URI, {
+	useNewUrlParser: true,
+	useUnifiedTopology: true,
+	dbName: 'class_todo'
+})
+	.then((res) => {
+		console.log("Connection Successful");
+	}).catch(err => {
+		console.log(err);
+	})
 
 app.set('view engine', 'ejs');
+
 const students = [
 	{
 		firstname: "Felix",
@@ -45,8 +60,8 @@ app.get("/about", (request, response) => {
 	response.render("pages/about");
 })
 
-app.get("/students/:id", (request, response) => {
-	const {id} = request.params;
+app.get("/students", (request, response) => {
+	const {id} = request.query;
 	response.render("pages/students", {id});
 })
 

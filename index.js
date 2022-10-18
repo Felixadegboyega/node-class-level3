@@ -2,13 +2,24 @@ const express = require('express');
 const path = require('path');
 const app = express();
 const dotenv = require('dotenv');
+const bodyParser = require('body-parser');
+app.use(bodyParser.urlencoded({extended: true}));
 dotenv.config();
 const mongoose = require('mongoose');
+
+const userSchema = new mongoose.Schema(
+	{
+		firstname: String,
+		lastname: String,
+	}
+)
+
+const UserModel = mongoose.model('User', userSchema)
 
 mongoose.connect(process.env.URI, {
 	useNewUrlParser: true,
 	useUnifiedTopology: true,
-	dbName: 'class_todo'
+
 })
 	.then((res) => {
 		console.log("Connection Successful");
@@ -62,7 +73,25 @@ app.get("/about", (request, response) => {
 
 app.get("/students", (request, response) => {
 	const {id} = request.query;
-	response.render("pages/students", {id});
+	response.render("pages/students", {id, students});
+})
+
+app.get("/new-user", (request, response) => {
+	response.render("pages/new-user");
+})
+
+app.post("/new-user", (request, response) => {
+	const {firstname, lastname} = request.body
+	UserModel.create({firstname, lastname}, (err, res) => {
+		if (err) {
+			console.log(err);
+			console.log("There is an error");
+		} else {
+			console.log("Saved");
+		}
+	})
+	students.push({firstname, lastname});
+	response.redirect('/students');
 })
 
 app.get("/contact", (request, response) => {

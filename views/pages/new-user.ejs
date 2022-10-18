@@ -1,0 +1,15 @@
+<%- include('../partials/navbar.ejs') %>
+<div class="max-w-sm p-2 mx-auto flex h-screen">
+	<div class="m-auto">
+		<h2 class="text-lg text-center">Add new user</h2>
+		<form action="/new-user" method="post">
+			<input name="lastname" type="text"
+				class="border p-1 w-full focus:border-blue-300 outline-none rounded mt-2 transition-all duration-200">
+			<input name="firstname" type="text"
+				class="border p-1 w-full focus:border-blue-300 outline-none rounded mt-2 transition-all duration-200">
+			<button type="submit"
+				class="border p-1 w-full bg-blue-400 text-white focus:border-blue-300 outline-none rounded mt-2 transition-all duration-200">Submit</button>
+		</form>
+	</div>
+</div>
+<%- include('../partials/footer.ejs') %>

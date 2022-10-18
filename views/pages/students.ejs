@@ -1,4 +1,8 @@
 <%- include('../partials/navbar.ejs') %>
 Students are here
-<%= id %>
+<%= id %> <br>
+<% students.forEach(student => { %>
+<%= student.firstname %>
+<%= student.lastname %> <br>
+<% }) %>
 <%- include('../partials/footer.ejs') %>

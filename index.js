@@ -1,25 +1,16 @@
 const express = require('express');
-const path = require('path');
 const app = express();
 const dotenv = require('dotenv');
 const bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({extended: true}));
 dotenv.config();
 const mongoose = require('mongoose');
-
-const userSchema = new mongoose.Schema(
-	{
-		firstname: String,
-		lastname: String,
-	}
-)
-
-const UserModel = mongoose.model('User', userSchema)
+const {register, getUsers} = require('./controllers/usersController');
+const {checkUser} = require('./middlewares/userMiddleware');
 
 mongoose.connect(process.env.URI, {
 	useNewUrlParser: true,
 	useUnifiedTopology: true,
-
 })
 	.then((res) => {
 		console.log("Connection Successful");
@@ -28,6 +19,7 @@ mongoose.connect(process.env.URI, {
 	})
 
 app.set('view engine', 'ejs');
+// app.use('/student', )
 
 const students = [
 	{
@@ -71,28 +63,23 @@ app.get("/about", (request, response) => {
 	response.render("pages/about");
 })
 
-app.get("/students", (request, response) => {
+app.get("/students", checkUser, (request, response) => {
 	const {id} = request.query;
 	response.render("pages/students", {id, students});
 })
+
+// app.get("/students/update", checkUser, (request, response) => {
+// 	const {id} = request.query;
+// 	response.render("pages/students", {id, students});
+// })
 
 app.get("/new-user", (request, response) => {
 	response.render("pages/new-user");
 })
 
-app.post("/new-user", (request, response) => {
-	const {firstname, lastname} = request.body
-	UserModel.create({firstname, lastname}, (err, res) => {
-		if (err) {
-			console.log(err);
-			console.log("There is an error");
-		} else {
-			console.log("Saved");
-		}
-	})
-	students.push({firstname, lastname});
-	response.redirect('/students');
-})
+app.get("/get-users", getUsers)
+
+app.post("/new-user", register)
 
 app.get("/contact", (request, response) => {
 	response.render("pages/contact");

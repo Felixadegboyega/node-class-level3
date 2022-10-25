@@ -10,7 +10,7 @@ const register = (request, response) => {
 			console.log("Saved");
 		}
 	})
-	students.push({firstname, lastname});
+	// students.push({firstname, lastname});
 	response.redirect('/students');
 }
 

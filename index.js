@@ -2,11 +2,15 @@ const express = require('express');
 const app = express();
 const dotenv = require('dotenv');
 const bodyParser = require('body-parser');
+
 app.use(bodyParser.urlencoded({extended: true}));
 dotenv.config();
 const mongoose = require('mongoose');
 const {register, getUsers} = require('./controllers/usersController');
 const {checkUser} = require('./middlewares/userMiddleware');
+const {addTodo, getTodos} = require('./controllers/todosController');
+
+app.use(express.json())
 
 mongoose.connect(process.env.URI, {
 	useNewUrlParser: true,
@@ -67,6 +71,9 @@ app.get("/students", checkUser, (request, response) => {
 	const {id} = request.query;
 	response.render("pages/students", {id, students});
 })
+
+app.post("/new-todo", addTodo)
+app.post("/get-todos", getTodos)
 
 // app.get("/students/update", checkUser, (request, response) => {
 // 	const {id} = request.query;

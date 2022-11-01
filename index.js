@@ -2,14 +2,16 @@ const express = require('express');
 const app = express();
 const dotenv = require('dotenv');
 const bodyParser = require('body-parser');
+const cors = require("cors");
 
 app.use(bodyParser.urlencoded({extended: true}));
 dotenv.config();
 const mongoose = require('mongoose');
+
 const {register, getUsers} = require('./controllers/usersController');
 const {checkUser} = require('./middlewares/userMiddleware');
-const {addTodo, getTodos} = require('./controllers/todosController');
-
+const {addTodo, getTodos, showNewTodoPage} = require('./controllers/todosController');
+app.use(cors())
 app.use(express.json())
 
 mongoose.connect(process.env.URI, {
@@ -72,6 +74,7 @@ app.get("/students", checkUser, (request, response) => {
 	response.render("pages/students", {id, students});
 })
 
+app.get("/new-todo", showNewTodoPage)
 app.post("/new-todo", addTodo)
 app.post("/get-todos", getTodos)
 
@@ -79,7 +82,6 @@ app.post("/get-todos", getTodos)
 // 	const {id} = request.query;
 // 	response.render("pages/students", {id, students});
 // })
-
 app.get("/new-user", (request, response) => {
 	response.render("pages/new-user");
 })

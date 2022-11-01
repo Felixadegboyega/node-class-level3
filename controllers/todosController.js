@@ -1,11 +1,12 @@
 const TodoModel = require("../models/todoModel");
 
 const addTodo = (req, res) => {
-	const {name, user} = req.body;
-	console.log({user, name})
-	TodoModel.create({name, user}, (err, message) => {
+	const {todoName} = req.body;
+	console.log({todoName})
+	TodoModel.create({name: todoName}, (err, message) => {
 		if (err) {
 			console.log(err);
+			res.send(err);
 			console.log("There is error");
 		} else {
 			res.json(message);
@@ -24,4 +25,15 @@ const getTodos = (req, res) => {
 	}).populate("user")
 }
 
-module.exports = {addTodo, getTodos}
+const showNewTodoPage = (req, res) => {
+	res.render("pages/add-todo");
+}
+
+const deleteTodo = (req, res) => {
+	let {id} = req.body;
+	TodoModel.findByIdAndUpdate(id, {phone: "09000000000"}, (err, message) => {
+
+	})
+}
+
+module.exports = {addTodo, getTodos, showNewTodoPage}

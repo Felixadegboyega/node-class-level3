@@ -11,9 +11,11 @@ const mongoose = require('mongoose');
 const {register, getUsers} = require('./controllers/usersController');
 const {checkUser} = require('./middlewares/userMiddleware');
 const {addTodo, getTodos, showNewTodoPage} = require('./controllers/todosController');
+const multer = require('multer');
+const path = require('path');
 app.use(cors())
 app.use(express.json())
-
+const upload = multer({dest: './images'})
 mongoose.connect(process.env.URI, {
 	useNewUrlParser: true,
 	useUnifiedTopology: true,
@@ -69,6 +71,12 @@ app.get("/about", (request, response) => {
 	response.render("pages/about");
 })
 
+app.post('/new-file', upload.single("image"), (req, res) => {
+	console.log(req.file.path);
+	res.send("Success");
+
+})
+
 app.get("/students", checkUser, (request, response) => {
 	const {id} = request.query;
 	response.render("pages/students", {id, students});
@@ -77,6 +85,8 @@ app.get("/students", checkUser, (request, response) => {
 app.get("/new-todo", showNewTodoPage)
 app.post("/new-todo", addTodo)
 app.post("/get-todos", getTodos)
+
+// http://localhost:3200/new-todo
 
 // app.get("/students/update", checkUser, (request, response) => {
 // 	const {id} = request.query;

@@ -13,4 +13,10 @@
 	<%= student.firstname%> <%= student.lastname%> from <%= student.school %> <br>
 	<% }) %>
 </h1>
+<!-- /home/felix/Desktop/node-class/images/8656447386eb8f5467b066ff5b68380f -->
+<img src="<%= student.path %> " alt="">
+<form class="shadow-md p-4 rounded m-3" enctype="multipart/form-data" action="/new-file" method="post">
+	<input type="file" name="image" accept="image/*">
+	<button type="submit" class="border border-green-300 rounded p-2">Submit</button>
+</form>
 <%- include('../partials/footer.ejs') %>

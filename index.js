@@ -8,7 +8,7 @@ app.use(bodyParser.urlencoded({extended: true}));
 dotenv.config();
 const mongoose = require('mongoose');
 
-const {register, getUsers} = require('./controllers/usersController');
+const {register, getUsers, login} = require('./controllers/usersController');
 const {checkUser} = require('./middlewares/userMiddleware');
 const {addTodo, getTodos, showNewTodoPage} = require('./controllers/todosController');
 const multer = require('multer');
@@ -99,6 +99,7 @@ app.get("/new-user", (request, response) => {
 app.get("/get-users", getUsers)
 
 app.post("/new-user", register)
+app.post("/login", login);
 
 app.get("/contact", (request, response) => {
 	response.render("pages/contact");

@@ -17,7 +17,8 @@ const userSchema = new mongoose.Schema(
 		profileImagePath: String,
 		password: {
 			type: String,
-			required: true
+			required: true,
+			select: false
 		}
 	}
 )

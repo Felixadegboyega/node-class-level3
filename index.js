@@ -8,7 +8,7 @@ app.use(bodyParser.urlencoded({extended: true}));
 dotenv.config();
 const mongoose = require('mongoose');
 
-const {register, getUsers, login} = require('./controllers/usersController');
+const {register, getUsers, login, fetchProfile} = require('./controllers/usersController');
 const {checkUser} = require('./middlewares/userMiddleware');
 const {addTodo, getTodos, showNewTodoPage} = require('./controllers/todosController');
 const multer = require('multer');
@@ -78,7 +78,7 @@ app.post('/new-file', upload.single("image"), (req, res) => {
 })
 
 app.get("/students", checkUser, (request, response) => {
-	const {id} = request.query;
+	// const {id} = request.query;
 	response.render("pages/students", {id, students});
 })
 
@@ -100,6 +100,7 @@ app.get("/get-users", getUsers)
 
 app.post("/new-user", register)
 app.post("/login", login);
+app.get("/get-profile", checkUser, fetchProfile);
 
 app.get("/contact", (request, response) => {
 	response.render("pages/contact");
@@ -109,6 +110,6 @@ app.get("/home", (request, response) => {
 	response.sendFile(__dirname + '/index.html');
 })
 
-app.listen("3200", () => {
-	console.log("server is running at port 3200");
+app.listen("3400", () => {
+	console.log("server is running at port 3400");
 })

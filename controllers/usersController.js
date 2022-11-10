@@ -1,5 +1,7 @@
 const UserModel = require("../models/userModel");
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+require('dotenv').config();
 
 const register = (request, response) => {
 	const {firstname, lastname, password} = request.body
@@ -19,16 +21,28 @@ const register = (request, response) => {
 
 const login = (request, response) => {
 	const {_id, password} = request.body;
-	UserModel.findOne({_id}, async (err, message) => {
+	UserModel.findOne({_id}).select('+password').exec(async (err, message) => {
 		if (err) {
 			response.send(err);
-		} else {
+		} else if (message) {
 			const validPassword = await bcrypt.compare(password, message.password);
-			response.send(validPassword);
+			if (validPassword) {
+				const token = jwt.sign({_id: message._id}, process.env.JWT_SECRET, {expiresIn: '1h'});
+				response.json({token, message: "Token generated"});
+			} else {
+				response.send({status: false, message: "Invalid password"});
+			}
+		} else {
+			response.send({status: false, message: "Email does not exist"});
 		}
-	})
+	});
 }
 
+const fetchProfile = (req, res) => {
+	UserModel.findById(req.user._id, (err, data) => {
+		res.json({status: true, message: "User Profile fetched", data})
+	})
+}
 
 const getUsers = (request, response) => {
 	UserModel.find((err, res) => {
@@ -37,4 +51,4 @@ const getUsers = (request, response) => {
 	})
 }
 
-module.exports = {register, login, getUsers}
+module.exports = {register, login, getUsers, fetchProfile}

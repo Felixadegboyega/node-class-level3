@@ -4,8 +4,8 @@ const jwt = require("jsonwebtoken");
 require('dotenv').config();
 
 const register = (request, response) => {
-	const {firstname, lastname, password} = request.body
-	UserModel.create({firstname, lastname, password}, (err, res) => {
+	const {firstname, lastname, password, email} = request.body
+	UserModel.create({firstname, lastname, password, email}, (err, res) => {
 		if (err) {
 			console.log(err);
 			console.log("There is an error");
@@ -20,14 +20,14 @@ const register = (request, response) => {
 }
 
 const login = (request, response) => {
-	const {_id, password} = request.body;
-	UserModel.findOne({_id}).select('+password').exec(async (err, message) => {
+	const {email, password} = request.body;
+	UserModel.findOne({email}).select('+password').exec(async (err, message) => {
 		if (err) {
 			response.send(err);
 		} else if (message) {
 			const validPassword = await bcrypt.compare(password, message.password);
 			if (validPassword) {
-				const token = jwt.sign({_id: message._id}, process.env.JWT_SECRET, {expiresIn: '1h'});
+				const token = jwt.sign({_id: message._id}, process.env.JWT_SECRET, {expiresIn: 60});
 				response.json({token, message: "Token generated"});
 			} else {
 				response.send({status: false, message: "Invalid password"});

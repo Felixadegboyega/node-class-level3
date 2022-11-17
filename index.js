@@ -1,5 +1,24 @@
 const express = require('express');
 const app = express();
+const http = require("http");
+const server = http.createServer(app);
+const {Server} = require("socket.io");
+
+const io = new Server(server, {
+	cors: {
+		origin: "*",
+		methods: ['POST', 'PUT', 'GET']
+	}
+});
+
+
+io.on("connection", (socket) => {
+	console.log(socket.id);
+	socket.on("send-user", (data) => {
+		socket.broadcast.emit("user-sent", data);
+	})
+})
+
 const dotenv = require('dotenv');
 const bodyParser = require('body-parser');
 const cors = require("cors");
@@ -110,6 +129,6 @@ app.get("/home", (request, response) => {
 	response.sendFile(__dirname + '/index.html');
 })
 
-app.listen("3400", () => {
+server.listen("3400", () => {
 	console.log("server is running at port 3400");
 })

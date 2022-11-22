@@ -13,10 +13,18 @@ const io = new Server(server, {
 
 
 io.on("connection", (socket) => {
+	addUser({socketId: socket.id})
+	console.log(users);
 	console.log(socket.id);
 	socket.on("send-user", (data) => {
 		socket.broadcast.emit("user-sent", data);
 	})
+
+	socket.on('disconnect', () => {
+		console.log(socket.id);
+		removeUser({socketId: socket.id});
+		console.log(users);
+	});
 })
 
 const dotenv = require('dotenv');
@@ -32,6 +40,7 @@ const {checkUser} = require('./middlewares/userMiddleware');
 const {addTodo, getTodos, showNewTodoPage} = require('./controllers/todosController');
 const multer = require('multer');
 const path = require('path');
+const {addUser, removeUser, users} = require('./store');
 app.use(cors())
 app.use(express.json())
 const upload = multer({dest: './images'})

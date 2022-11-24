@@ -1,6 +1,7 @@
 const UserModel = require("../models/userModel");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const {sendMail} = require("../mail");
 require('dotenv').config();
 
 const register = (request, response) => {
@@ -12,6 +13,7 @@ const register = (request, response) => {
 			response.send(err);
 		} else {
 			console.log("Saved");
+			// sendMail(email);
 			response.send(res);
 		}
 	})

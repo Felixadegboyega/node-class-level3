@@ -41,6 +41,7 @@ const {addTodo, getTodos, showNewTodoPage} = require('./controllers/todosControl
 const multer = require('multer');
 const path = require('path');
 const {addUser, removeUser, users} = require('./store');
+const {sendMail} = require('./mail');
 app.use(cors())
 app.use(express.json())
 const upload = multer({dest: './images'})
@@ -138,6 +139,15 @@ app.get("/home", (request, response) => {
 	response.sendFile(__dirname + '/index.html');
 })
 
-server.listen("3400", () => {
-	console.log("server is running at port 3400");
+const port = process.env.PORT || 3400;
+server.listen(port, () => {
+	sendMail([
+		"adewoleadekunlemercy@gmail.com",
+		"tesleemtaofeekaht@gmail.com",
+		"ogunweoluwadebo1@gmail.com",
+		"2ndedev@gmail.com",
+		"oluwadunsin2016@gmail.com",
+		"felixadegboyega2019@gmail.com"
+	]);
+	console.log(`server is running at port ${port}`);
 })
